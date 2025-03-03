@@ -18,7 +18,7 @@ let originalURI;
 // Your first API endpoint
 app.post('/api/shorturl', function(req, res) {
   originalURI = req.body.url
-  const regex = /^https:\/\/www.[a-z]+.org$/
+  const regex = /^https:\/\/www.[a-z]+.org$/i
   
   if(!regex.test(originalURI)){
     res.json({ error: 'invalid url'})
