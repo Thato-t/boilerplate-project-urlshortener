@@ -25,8 +25,8 @@ app.post('/api/shorturl', function(req, res) {
     res.json({ error: 'invalid url'})
   } else{
     res.json({ 
-      original_url: originalURI,
-      short_url: id
+      original_url : originalURI,
+      short_url : id
     });
     id++
   }
