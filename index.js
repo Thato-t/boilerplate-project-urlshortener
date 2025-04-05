@@ -14,28 +14,34 @@ app.get('/', function(req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
 });
 
-let originalURI;
-let id = 1
-// Your first API endpoint
-app.post('/api/shorturl', function(req, res) {
-  originalURI = req.body.url
-  const regex = /^https?:\/\/(www|forum)?.?[a-z]+.(org|co.za|edu.za|com)$/i
-  const shortUrl = id++
-  
-  if(!regex.test(originalURI)){
-    res.json({ error: 'invalid url'})
-  } else{
-    res.json({ 
-      original_url : originalURI,
-      short_url : shortUrl
-    });
+let urlDatabase = {};
+let counter = 1;
+
+const urlRegex = /^(https?:\/\/)(www\.)?([a-zA-Z0-9\-]+\.)+[a-zA-Z]{2,}(\/\S*)?$/;
+
+app.post('/api/shorturl', (req, res) => {
+  const originalUrl = req.body.url;
+
+  // 🔎 Validate using regex
+  if (!urlRegex.test(originalUrl)) {
+    return res.json({ error: 'invalid url' });
   }
+
+  // 💾 Store valid URL and generate short version
+  const shortUrl = counter++;
+  urlDatabase[shortUrl] = originalUrl;
+
+  res.json({
+    original_url: originalUrl,
+    short_url: shortUrl
+  });
 });
 
-app.get('/api/shorturl/:url?', (req, res) => {
-  const uri = originalURI;
-  res.redirect(uri)
-})
+app.get('/api/shorturl/:short', (req, res) => {
+  const short = req.params.short;
+  const original = urlDatabase[short]
+    res.redirect(original);
+});
 
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
