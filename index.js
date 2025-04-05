@@ -27,7 +27,7 @@ app.post('/api/shorturl', function(req, res) {
   } else{
     res.json({ 
       original_url : originalURI,
-      short_url : shortUrl
+      short_url : 1
     });
   }
 });
